@@ -9,6 +9,7 @@ from .retry_strategy import (
     retry_on_exception_type,
     retry_on_error_message,
 )
+from .llm_fallback_retry import LLMFallbackRetry
 
 __all__ = [
     "RetryStrategy",
@@ -16,6 +17,7 @@ __all__ = [
     "ExponentialBackoffRetry",
     "FixedDelayRetry",
     "LinearBackoffRetry",
+    "LLMFallbackRetry",
     "retry_on_exception_type",
     "retry_on_error_message",
 ]

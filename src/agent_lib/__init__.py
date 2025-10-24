@@ -13,10 +13,17 @@ Core Components:
 See documentation at: https://agent-orchestration-lib.readthedocs.io
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # Core components
-from .core import ExecutionContext, EventEmitter, AgentBlock
+from .core import (
+    ExecutionContext,
+    EventEmitter,
+    AgentBlock,
+    Flow,
+    ConditionalStep,
+    FlowAdapter,
+)
 
 # Event models
 from .events import (
@@ -29,9 +36,17 @@ from .events import (
     MetricEvent,
 )
 
-# Components to be implemented
-# from .core import Flow
-# from .retry import RetryStrategy, ExponentialBackoffRetry, LLMFallbackRetry
+# Retry strategies
+from .retry import (
+    RetryStrategy,
+    NoRetry,
+    ExponentialBackoffRetry,
+    FixedDelayRetry,
+    LinearBackoffRetry,
+    LLMFallbackRetry,
+    retry_on_exception_type,
+    retry_on_error_message,
+)
 
 __all__ = [
     "__version__",
@@ -39,6 +54,9 @@ __all__ = [
     "ExecutionContext",
     "EventEmitter",
     "AgentBlock",
+    "Flow",
+    "ConditionalStep",
+    "FlowAdapter",
     # Event models
     "Event",
     "StartEvent",
@@ -47,9 +65,13 @@ __all__ = [
     "CompletionEvent",
     "RetryEvent",
     "MetricEvent",
-    # To be implemented
-    # "Flow",
-    # "RetryStrategy",
-    # "ExponentialBackoffRetry",
-    # "LLMFallbackRetry",
+    # Retry strategies
+    "RetryStrategy",
+    "NoRetry",
+    "ExponentialBackoffRetry",
+    "FixedDelayRetry",
+    "LinearBackoffRetry",
+    "LLMFallbackRetry",
+    "retry_on_exception_type",
+    "retry_on_error_message",
 ]
