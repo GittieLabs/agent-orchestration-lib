@@ -6,7 +6,7 @@ A framework for building composable, observable, and maintainable agent workflow
 Core Components:
 - ExecutionContext: Dependency injection container
 - EventEmitter: Event-driven notification system
-- AgentBlock: Base class for agent implementations (coming soon)
+- AgentBlock: Base class for agent implementations
 - RetryStrategy: Configurable retry logic with LLM fallbacks (coming soon)
 - Flow: Multi-agent workflow orchestration (coming soon)
 
@@ -16,7 +16,7 @@ See documentation at: https://agent-orchestration-lib.readthedocs.io
 __version__ = "0.1.0"
 
 # Core components
-from .core import ExecutionContext, EventEmitter
+from .core import ExecutionContext, EventEmitter, AgentBlock
 
 # Event models
 from .events import (
@@ -30,7 +30,7 @@ from .events import (
 )
 
 # Components to be implemented
-# from .core import AgentBlock, Flow
+# from .core import Flow
 # from .retry import RetryStrategy, ExponentialBackoffRetry, LLMFallbackRetry
 
 __all__ = [
@@ -38,6 +38,7 @@ __all__ = [
     # Core components
     "ExecutionContext",
     "EventEmitter",
+    "AgentBlock",
     # Event models
     "Event",
     "StartEvent",
@@ -47,7 +48,6 @@ __all__ = [
     "RetryEvent",
     "MetricEvent",
     # To be implemented
-    # "AgentBlock",
     # "Flow",
     # "RetryStrategy",
     # "ExponentialBackoffRetry",

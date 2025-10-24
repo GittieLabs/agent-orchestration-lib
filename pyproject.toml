@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "Keith Elliott", email = "keith@example.com"},
+    {name = "Keith Elliott", email = "keith@gittie.co"},
 ]
 keywords = ["agents", "orchestration", "ai", "llm", "workflow"]
 classifiers = [
@@ -37,12 +37,18 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.5.0",
 ]
+webhooks = [
+    "httpx>=0.24.0",
+]
+all = [
+    "httpx>=0.24.0",
+]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/agent-orchestration-lib"
+Homepage = "https://github.com/GittieLabs/agent-orchestration-lib"
 Documentation = "https://agent-orchestration-lib.readthedocs.io"
-Repository = "https://github.com/yourusername/agent-orchestration-lib"
-Issues = "https://github.com/yourusername/agent-orchestration-lib/issues"
+Repository = "https://github.com/GittieLabs/agent-orchestration-lib"
+Issues = "https://github.com/GittieLabs/agent-orchestration-lib/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/agent_lib"]
