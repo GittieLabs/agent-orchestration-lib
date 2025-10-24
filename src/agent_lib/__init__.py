@@ -13,7 +13,7 @@ Core Components:
 See documentation at: https://agent-orchestration-lib.readthedocs.io
 """
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 # Core components
 from .core import (
