@@ -67,3 +67,11 @@ dmypy.json
 **/PHASE*.md
 **/STATUS*.md
 **/PLAN*.md
+
+# Implementation and planning documents (local only)
+Implementation/
+
+# Test and debug files (temporary, not for repo)
+**/test_debug_*.py
+**/debug_*.py
+**/temp_test_*.py
