@@ -5,6 +5,7 @@ from .event_emitter import EventEmitter
 from .agent_block import AgentBlock
 from .flow import Flow
 from .conditional_step import ConditionalStep
+from .switch_step import SwitchStep
 from .flow_adapter import FlowAdapter
 
 __all__ = [
@@ -13,5 +14,6 @@ __all__ = [
     "AgentBlock",
     "Flow",
     "ConditionalStep",
+    "SwitchStep",
     "FlowAdapter",
 ]

@@ -33,6 +33,7 @@ from .core import (
     AgentBlock,
     Flow,
     ConditionalStep,
+    SwitchStep,
     FlowAdapter,
 )
 
@@ -67,6 +68,7 @@ __all__ = [
     "AgentBlock",
     "Flow",
     "ConditionalStep",
+    "SwitchStep",
     "FlowAdapter",
     # Event models
     "Event",
