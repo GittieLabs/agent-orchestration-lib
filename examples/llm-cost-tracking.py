@@ -14,7 +14,7 @@ import asyncio
 import os
 from typing import List
 
-from agent_lib import EventEmitter, ExecutionContext, Flow
+from agent_lib import EventEmitter, ExecutionContext
 from agent_lib.integrations.openai import OpenAIAgent, create_simple_prompt
 
 
@@ -194,16 +194,20 @@ async def main() -> None:
     simple_cost = sum(r["cost"] for r in tracker.requests if "gpt-3.5" in r["model"])
     complex_cost = sum(r["cost"] for r in tracker.requests if "gpt-4" in r["model"])
 
-    print(f"\nCost breakdown:")
-    print(f"  GPT-3.5-turbo requests: ${simple_cost:.6f} ({len([r for r in tracker.requests if 'gpt-3.5' in r['model']])} requests)")
-    print(f"  GPT-4 requests: ${complex_cost:.6f} ({len([r for r in tracker.requests if 'gpt-4' in r['model']])} requests)")
+    print("\nCost breakdown:")
+    print(
+        f"  GPT-3.5-turbo requests: ${simple_cost:.6f} ({len([r for r in tracker.requests if 'gpt-3.5' in r['model']])} requests)"
+    )
+    print(
+        f"  GPT-4 requests: ${complex_cost:.6f} ({len([r for r in tracker.requests if 'gpt-4' in r['model']])} requests)"
+    )
 
-    print(f"\n✓ Optimization strategies:")
-    print(f"  1. Use GPT-3.5 for simple tasks (75% cheaper)")
-    print(f"  2. Use GPT-4 only when quality matters")
-    print(f"  3. Set max_tokens to limit costs")
-    print(f"  4. Cache responses when possible")
-    print(f"  5. Batch similar requests together")
+    print("\n✓ Optimization strategies:")
+    print("  1. Use GPT-3.5 for simple tasks (75% cheaper)")
+    print("  2. Use GPT-4 only when quality matters")
+    print("  3. Set max_tokens to limit costs")
+    print("  4. Cache responses when possible")
+    print("  5. Batch similar requests together")
 
     # Budget management example
     print("\n" + "=" * 60)

@@ -51,13 +51,9 @@ class OpenAIPrompt(BaseModel):
     messages: List[OpenAIMessage] = Field(description="Conversation messages")
     model: str = Field(default="gpt-4", description="OpenAI model name")
     temperature: float = Field(default=0.7, ge=0.0, le=2.0, description="Sampling temperature")
-    max_tokens: Optional[int] = Field(
-        default=None, ge=1, description="Maximum tokens to generate"
-    )
+    max_tokens: Optional[int] = Field(default=None, ge=1, description="Maximum tokens to generate")
     top_p: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Nucleus sampling")
-    frequency_penalty: float = Field(
-        default=0.0, ge=-2.0, le=2.0, description="Frequency penalty"
-    )
+    frequency_penalty: float = Field(default=0.0, ge=-2.0, le=2.0, description="Frequency penalty")
     presence_penalty: float = Field(default=0.0, ge=-2.0, le=2.0, description="Presence penalty")
     stop: Optional[List[str]] = Field(default=None, max_length=4, description="Stop sequences")
     response_format: Optional[Dict[str, str]] = Field(

@@ -53,7 +53,7 @@ async def main() -> None:
 
     result1 = await agent.execute(prompt1)
 
-    print(f"\nPrompt: What is Python?")
+    print("\nPrompt: What is Python?")
     print(f"Model: {result1.model}")
     print(f"\nResponse:\n{result1.content}")
     print(f"\nTokens: {result1.total_tokens} (estimated)")
@@ -61,7 +61,7 @@ async def main() -> None:
     print(f"Finish reason: {result1.finish_reason}")
 
     if result1.safety_ratings:
-        print(f"\nSafety ratings:")
+        print("\nSafety ratings:")
         for rating in result1.safety_ratings:
             print(f"  {rating['category']}: {rating['probability']}")
 
@@ -81,8 +81,8 @@ async def main() -> None:
 
     result2 = await agent.execute(prompt2)
 
-    print(f"\nPrompt: Write a haiku about Python programming")
-    print(f"Temperature: 0.9 (creative)")
+    print("\nPrompt: Write a haiku about Python programming")
+    print("Temperature: 0.9 (creative)")
     print(f"\nResponse:\n{result2.content}")
     print(f"\nTokens: {result2.total_tokens}")
     print(f"Cost: ${result2.cost_usd:.6f}")
@@ -101,7 +101,7 @@ async def main() -> None:
 
     result3 = await agent.execute(prompt3)
 
-    print(f"\nTemperature: 0.2 (factual/deterministic)")
+    print("\nTemperature: 0.2 (factual/deterministic)")
     print(f"\nResponse:\n{result3.content}")
     print(f"\nTokens: {result3.total_tokens}")
     print(f"Cost: ${result3.cost_usd:.6f}")
@@ -139,8 +139,8 @@ async def main() -> None:
 
     result5 = await agent.execute(prompt5)
 
-    print(f"\nPrompt: Creative names for a web scraping library")
-    print(f"Top-K: 40 (controlled randomness)")
+    print("\nPrompt: Creative names for a web scraping library")
+    print("Top-K: 40 (controlled randomness)")
     print(f"\nResponse:\n{result5.content}")
     print(f"\nTokens: {result5.total_tokens}")
     print(f"Cost: ${result5.cost_usd:.6f}")
@@ -189,12 +189,12 @@ async def main() -> None:
 
     print(f"\nTotal tokens used: {total_tokens} (estimated)")
     print(f"Total cost: ${total_cost:.6f}")
-    print(f"\nGemini advantages:")
-    print(f"  - Very cost-effective pricing")
-    print(f"  - Gemini 1.5 Flash is extremely fast and cheap")
-    print(f"  - 1M token context window (Gemini 1.5)")
-    print(f"  - Built-in safety ratings")
-    print(f"  - Fine-grained control with top-k, top-p, temperature")
+    print("\nGemini advantages:")
+    print("  - Very cost-effective pricing")
+    print("  - Gemini 1.5 Flash is extremely fast and cheap")
+    print("  - 1M token context window (Gemini 1.5)")
+    print("  - Built-in safety ratings")
+    print("  - Fine-grained control with top-k, top-p, temperature")
 
 
 if __name__ == "__main__":

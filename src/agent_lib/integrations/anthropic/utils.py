@@ -6,7 +6,7 @@ from typing import Dict
 # Source: https://www.anthropic.com/pricing
 ANTHROPIC_PRICING: Dict[str, Dict[str, float]] = {
     "claude-3-opus-20240229": {
-        "input": 15.00,   # per 1M tokens
+        "input": 15.00,  # per 1M tokens
         "output": 75.00,  # per 1M tokens
     },
     "claude-3-sonnet-20240229": {

@@ -6,7 +6,7 @@ from typing import Dict
 # Source: https://ai.google.dev/pricing
 GEMINI_PRICING: Dict[str, Dict[str, float]] = {
     "gemini-pro": {
-        "input": 0.50,   # per 1M tokens
+        "input": 0.50,  # per 1M tokens
         "output": 1.50,  # per 1M tokens
     },
     "gemini-pro-vision": {
@@ -14,7 +14,7 @@ GEMINI_PRICING: Dict[str, Dict[str, float]] = {
         "output": 1.50,
     },
     "gemini-1.5-pro": {
-        "input": 3.50,   # For prompts up to 128K tokens
+        "input": 3.50,  # For prompts up to 128K tokens
         "output": 10.50,
     },
     "gemini-1.5-flash": {

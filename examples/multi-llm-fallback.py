@@ -21,9 +21,16 @@ import asyncio
 import os
 
 from agent_lib import EventEmitter, ExecutionContext, Flow
-from agent_lib.integrations.anthropic import AnthropicAgent, create_simple_prompt as anthropic_prompt
-from agent_lib.integrations.gemini import GeminiAgent, create_simple_prompt as gemini_prompt
-from agent_lib.integrations.openai import OpenAIAgent, create_simple_prompt as openai_prompt
+from agent_lib.integrations.anthropic import (
+    AnthropicAgent,
+)
+from agent_lib.integrations.anthropic import (
+    create_simple_prompt as anthropic_prompt,
+)
+from agent_lib.integrations.gemini import GeminiAgent
+from agent_lib.integrations.gemini import create_simple_prompt as gemini_prompt
+from agent_lib.integrations.openai import OpenAIAgent
+from agent_lib.integrations.openai import create_simple_prompt as openai_prompt
 from agent_lib.retry import LLMFallbackRetry
 
 
@@ -74,7 +81,7 @@ async def main() -> None:
         print(f"\n✓ Success with primary model: {result.model}")
         print(f"Response: {result.content}")
         print(f"Cost: ${result.cost_usd:.6f}")
-        print(f"\nNo fallback was needed - primary model succeeded!")
+        print("\nNo fallback was needed - primary model succeeded!")
 
     # Example 2: Fallback scenario (simulated by using wrong API key or unavailable model)
     print("\n" + "=" * 60)

@@ -195,7 +195,7 @@ def calculate_average(numbers):
 
     print("\nChecking memory...")
     test_response = await agent_with_history.chat("What were the first two numbers I mentioned?")
-    print(f"\nQ: What were the first two numbers I mentioned?")
+    print("\nQ: What were the first two numbers I mentioned?")
     print(f"A: {test_response}")
     print("\n(The agent should only remember the last 3, not the first 2)")
 
@@ -212,7 +212,7 @@ def calculate_average(numbers):
     print("\n1. First conversation:")
     await reset_agent.chat("My name is Alice")
     response = await reset_agent.chat("What's my name?")
-    print(f"Q: What's my name?")
+    print("Q: What's my name?")
     print(f"A: {response}")
 
     print("\n2. Clearing history...")
@@ -220,7 +220,7 @@ def calculate_average(numbers):
 
     print("\n3. After reset:")
     response = await reset_agent.chat("What's my name?")
-    print(f"Q: What's my name?")
+    print("Q: What's my name?")
     print(f"A: {response}")
     print("(Should not remember Alice)")
 

@@ -21,9 +21,16 @@ import os
 import time
 
 from agent_lib import EventEmitter, ExecutionContext
-from agent_lib.integrations.anthropic import AnthropicAgent, create_simple_prompt as anthropic_prompt
-from agent_lib.integrations.gemini import GeminiAgent, create_simple_prompt as gemini_prompt
-from agent_lib.integrations.openai import OpenAIAgent, create_simple_prompt as openai_prompt
+from agent_lib.integrations.anthropic import (
+    AnthropicAgent,
+)
+from agent_lib.integrations.anthropic import (
+    create_simple_prompt as anthropic_prompt,
+)
+from agent_lib.integrations.gemini import GeminiAgent
+from agent_lib.integrations.gemini import create_simple_prompt as gemini_prompt
+from agent_lib.integrations.openai import OpenAIAgent
+from agent_lib.integrations.openai import create_simple_prompt as openai_prompt
 
 
 async def compare_llms(question: str) -> None:
@@ -140,7 +147,9 @@ async def compare_llms(question: str) -> None:
 
         print(f"\n💰 Cheapest: {cheapest['provider']} (${cheapest['cost']:.6f})")
         print(f"⚡ Fastest: {fastest['provider']} ({fastest['latency']:.2f}s)")
-        print(f"📝 Most detailed: {most_verbose['provider']} ({len(most_verbose['response'])} chars)")
+        print(
+            f"📝 Most detailed: {most_verbose['provider']} ({len(most_verbose['response'])} chars)"
+        )
 
         total_cost = sum(r["cost"] for r in results)
         avg_latency = sum(r["latency"] for r in results) / len(results)
@@ -171,9 +180,7 @@ async def main() -> None:
     print("\n" + "=" * 80)
     print("TEST 3: Technical Explanation")
     print("=" * 80)
-    await compare_llms(
-        "Explain what a REST API is in 2-3 sentences. Be clear and concise."
-    )
+    await compare_llms("Explain what a REST API is in 2-3 sentences. Be clear and concise.")
 
     # Test 4: Code generation
     print("\n" + "=" * 80)

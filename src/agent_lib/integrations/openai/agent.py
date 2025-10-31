@@ -9,7 +9,7 @@ from agent_lib.core.event_emitter import EventEmitter
 from agent_lib.core.execution_context import ExecutionContext
 
 from .models import OpenAIMessage, OpenAIPrompt, OpenAIResponse
-from .utils import calculate_cost, count_message_tokens
+from .utils import calculate_cost
 
 
 class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
@@ -100,11 +100,11 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
         if self._client is None:
             try:
                 from openai import AsyncOpenAI
-            except ImportError:
+            except ImportError as e:
                 raise ImportError(
                     "openai package is required for OpenAI integration. "
                     "Install with: pip install agent-orchestration-lib[openai]"
-                )
+                ) from e
 
             self._client = AsyncOpenAI(api_key=self.api_key)
             logger.debug(f"Created OpenAI client for agent '{self.name}'")
@@ -126,7 +126,9 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
         model = input_data.model or self.default_model
 
         # Emit progress before API call
-        self.emit_progress("calling_openai_api", {"model": model, "messages_count": len(input_data.messages)})
+        self.emit_progress(
+            "calling_openai_api", {"model": model, "messages_count": len(input_data.messages)}
+        )
 
         # Convert Pydantic models to dicts for API
         messages_dict = [msg.model_dump() for msg in input_data.messages]

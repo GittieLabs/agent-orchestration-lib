@@ -48,9 +48,7 @@ class AnthropicPrompt(BaseModel):
 
     messages: List[AnthropicMessage] = Field(description="Conversation messages")
     system: Optional[str] = Field(default=None, description="System prompt")
-    model: str = Field(
-        default="claude-3-sonnet-20240229", description="Anthropic model name"
-    )
+    model: str = Field(default="claude-3-sonnet-20240229", description="Anthropic model name")
     temperature: float = Field(default=1.0, ge=0.0, le=1.0, description="Sampling temperature")
     max_tokens: int = Field(ge=1, le=4096, description="Maximum tokens to generate")
     top_p: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Nucleus sampling")

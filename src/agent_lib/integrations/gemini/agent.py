@@ -1,6 +1,6 @@
 """Google Gemini agent implementation."""
 
-from typing import Any, Optional
+from typing import Any
 
 from loguru import logger
 
@@ -163,9 +163,7 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
             # Extract response data
             content = response.text if hasattr(response, "text") else ""
             finish_reason = parse_finish_reason(
-                response.candidates[0].finish_reason.name
-                if response.candidates
-                else None
+                response.candidates[0].finish_reason.name if response.candidates else None
             )
 
             # Estimate completion tokens
@@ -231,9 +229,7 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
         )
 
 
-def create_simple_prompt(
-    content: str, model: str = "gemini-pro", **kwargs: Any
-) -> GeminiPrompt:
+def create_simple_prompt(content: str, model: str = "gemini-pro", **kwargs: Any) -> GeminiPrompt:
     """Helper to create a simple Gemini prompt.
 
     Args:

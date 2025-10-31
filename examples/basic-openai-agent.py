@@ -48,9 +48,11 @@ async def main() -> None:
 
     result1 = await agent.execute(prompt1)
 
-    print(f"\nPrompt: What is Python?")
+    print("\nPrompt: What is Python?")
     print(f"\nResponse:\n{result1.content}")
-    print(f"\nTokens: {result1.total_tokens} (prompt: {result1.prompt_tokens}, completion: {result1.completion_tokens})")
+    print(
+        f"\nTokens: {result1.total_tokens} (prompt: {result1.prompt_tokens}, completion: {result1.completion_tokens})"
+    )
     print(f"Cost: ${result1.cost_usd:.6f}")
     print(f"Finish reason: {result1.finish_reason}")
 
@@ -68,8 +70,8 @@ async def main() -> None:
 
     result2 = await agent.execute(prompt2)
 
-    print(f"\nSystem: Expert Python developer")
-    print(f"User: How do I reverse a list in Python?")
+    print("\nSystem: Expert Python developer")
+    print("User: How do I reverse a list in Python?")
     print(f"\nResponse:\n{result2.content}")
     print(f"\nTokens: {result2.total_tokens}")
     print(f"Cost: ${result2.cost_usd:.6f}")
@@ -87,7 +89,7 @@ async def main() -> None:
 
     result3 = await agent.execute(prompt3)
 
-    print(f"\nPrompt: List 5 popular Python web frameworks")
+    print("\nPrompt: List 5 popular Python web frameworks")
     print(f"Model: {result3.model}")
     print(f"\nResponse:\n{result3.content}")
     print(f"\nTokens: {result3.total_tokens}")
@@ -102,13 +104,10 @@ async def main() -> None:
 
     prompt4 = OpenAIPrompt(
         messages=[
-            OpenAIMessage(
-                role="system",
-                content="You are a helpful assistant that outputs JSON."
-            ),
+            OpenAIMessage(role="system", content="You are a helpful assistant that outputs JSON."),
             OpenAIMessage(
                 role="user",
-                content='List 3 programming languages with their use cases. Format as JSON: {"languages": [{"name": "...", "use_case": "..."}]}'
+                content='List 3 programming languages with their use cases. Format as JSON: {"languages": [{"name": "...", "use_case": "..."}]}',
             ),
         ],
         model="gpt-4",
@@ -127,14 +126,16 @@ async def main() -> None:
     print("=" * 60)
 
     total_cost = result1.cost_usd + result2.cost_usd + result3.cost_usd + result4.cost_usd
-    total_tokens = result1.total_tokens + result2.total_tokens + result3.total_tokens + result4.total_tokens
+    total_tokens = (
+        result1.total_tokens + result2.total_tokens + result3.total_tokens + result4.total_tokens
+    )
 
     print(f"\nTotal tokens used: {total_tokens}")
     print(f"Total cost: ${total_cost:.6f}")
-    print(f"\nThis demonstrates the value of:")
-    print(f"  - Using GPT-3.5-turbo for simple tasks (much cheaper)")
-    print(f"  - Using GPT-4 for complex reasoning")
-    print(f"  - Automatic token counting and cost tracking")
+    print("\nThis demonstrates the value of:")
+    print("  - Using GPT-3.5-turbo for simple tasks (much cheaper)")
+    print("  - Using GPT-4 for complex reasoning")
+    print("  - Automatic token counting and cost tracking")
 
 
 if __name__ == "__main__":
