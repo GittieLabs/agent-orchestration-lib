@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.0] - 2025-10-31
 
 ### Added
+- **SwitchStep**: Multi-branch conditional routing for clean handling of 3+ cases
+  - Switch/case pattern similar to programming languages
+  - Selector function returns case key for routing
+  - Optional default/fallback agent
+  - Cleaner alternative to nested ConditionalStep blocks
+  - Full event emission and observability
+  - Example: `examples/switch-step-routing.py`
+
 - **OpenAI Integration**: Complete integration with GPT-4, GPT-4-turbo, and GPT-3.5-turbo models
   - `OpenAIAgent` for executing OpenAI API calls
   - Automatic token counting using tiktoken
