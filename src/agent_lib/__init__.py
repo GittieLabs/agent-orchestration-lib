@@ -7,13 +7,24 @@ Core Components:
 - ExecutionContext: Dependency injection container
 - EventEmitter: Event-driven notification system
 - AgentBlock: Base class for agent implementations
-- RetryStrategy: Configurable retry logic with LLM fallbacks (coming soon)
-- Flow: Multi-agent workflow orchestration (coming soon)
+- RetryStrategy: Configurable retry logic with LLM fallbacks
+- Flow: Multi-agent workflow orchestration
+
+LLM Integrations (optional):
+- OpenAI: GPT-4 and GPT-3.5-turbo support
+- Anthropic: Claude 3 models (Opus, Sonnet, Haiku)
+- Google Gemini: Gemini Pro and Gemini 1.5 models
+
+Install integrations:
+    pip install agent-orchestration-lib[openai]
+    pip install agent-orchestration-lib[anthropic]
+    pip install agent-orchestration-lib[gemini]
+    pip install agent-orchestration-lib[all-llm]
 
 See documentation at: https://agent-orchestration-lib.readthedocs.io
 """
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 # Core components
 from .core import (
@@ -74,4 +85,8 @@ __all__ = [
     "LLMFallbackRetry",
     "retry_on_exception_type",
     "retry_on_error_message",
+    # LLM integrations (available via submodules)
+    # Import as: from agent_lib.integrations.openai import OpenAIAgent
+    # Import as: from agent_lib.integrations.anthropic import AnthropicAgent
+    # Import as: from agent_lib.integrations.gemini import GeminiAgent
 ]

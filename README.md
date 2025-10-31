@@ -121,6 +121,25 @@ pip install agent-orchestration-lib
 - Python 3.10 or higher
 - Pydantic 2.0+
 
+### LLM Integrations (Optional)
+
+The library includes optional integrations with major LLM providers:
+
+```bash
+# Install specific integrations
+pip install agent-orchestration-lib[openai]      # OpenAI GPT models
+pip install agent-orchestration-lib[anthropic]   # Anthropic Claude models
+pip install agent-orchestration-lib[gemini]      # Google Gemini models
+
+# Or install all LLM integrations at once
+pip install agent-orchestration-lib[all-llm]
+```
+
+**Supported Providers**:
+- **OpenAI**: GPT-4, GPT-4-turbo, GPT-3.5-turbo with automatic token counting and cost estimation
+- **Anthropic**: Claude 3 Opus, Sonnet, and Haiku with 200K context window support
+- **Google Gemini**: Gemini Pro and Gemini 1.5 (Flash/Pro) with up to 1M token context
+
 ## Quick Start
 
 Here's a complete example building a document analysis workflow:
@@ -291,18 +310,110 @@ pytest tests/unit/test_agent_block.py
 5. **Testability**: Each component independently testable
 6. **Production-Ready**: Patterns extracted from real systems
 
+## LLM Integration Examples
+
+### OpenAI GPT Models
+
+```python
+import os
+from agent_lib import ExecutionContext, EventEmitter
+from agent_lib.integrations.openai import OpenAIAgent, create_simple_prompt
+
+context = ExecutionContext()
+emitter = EventEmitter()
+
+agent = OpenAIAgent(
+    name="gpt4",
+    api_key=os.getenv("OPENAI_API_KEY"),
+    context=context,
+    emitter=emitter
+)
+
+prompt = create_simple_prompt("What is Python?", model="gpt-4")
+result = await agent.execute(prompt)
+
+print(result.content)
+print(f"Tokens: {result.total_tokens}, Cost: ${result.cost_usd:.4f}")
+```
+
+### Anthropic Claude Models
+
+```python
+from agent_lib.integrations.anthropic import AnthropicAgent, create_system_prompt
+
+agent = AnthropicAgent(
+    name="claude",
+    api_key=os.getenv("ANTHROPIC_API_KEY"),
+    context=context,
+    emitter=emitter
+)
+
+prompt = create_system_prompt(
+    system="You are a helpful coding assistant",
+    user="How do I reverse a list in Python?",
+    model="claude-3-sonnet-20240229",
+    max_tokens=1024
+)
+
+result = await agent.execute(prompt)
+print(result.content)
+```
+
+### Google Gemini Models
+
+```python
+from agent_lib.integrations.gemini import GeminiAgent, create_simple_prompt
+
+agent = GeminiAgent(
+    name="gemini",
+    api_key=os.getenv("GOOGLE_API_KEY"),
+    context=context,
+    emitter=emitter
+)
+
+prompt = create_simple_prompt("Explain async/await in Python", model="gemini-pro")
+result = await agent.execute(prompt)
+print(result.content)
+```
+
+### Multi-Provider Fallback
+
+```python
+from agent_lib.retry import LLMFallbackRetry
+
+# Automatic fallback between providers
+fallback = LLMFallbackRetry(
+    models=["gpt-4", "claude-3-sonnet-20240229", "gemini-pro"],
+    max_retries=2
+)
+
+agent.retry_strategy = fallback
+result = await agent.execute(prompt)  # Tries GPT-4, falls back to Claude, then Gemini
+```
+
+See the [examples/](examples/) directory for more comprehensive examples including:
+- Cost tracking and budget management
+- Side-by-side provider comparison
+- Multi-turn conversations
+- And more!
+
 ## Project Status
 
-**Version**: 0.1.0 (Alpha)
+**Version**: 0.3.0 (Alpha)
 
 This library is in active development. The API is stabilizing but may change in minor releases. Feedback and contributions are welcome!
 
 ### Roadmap
 
 - [x] Core components (ExecutionContext, AgentBlock, EventEmitter, Flow)
-- [x] Retry strategies (Exponential backoff)
+- [x] Retry strategies (Exponential backoff, Fixed delay, Linear backoff)
 - [x] Event system with adapters
-- [ ] LLM fallback retry strategy
+- [x] LLM fallback retry strategy
+- [x] OpenAI integration (GPT-4, GPT-3.5-turbo)
+- [x] Anthropic integration (Claude 3 models)
+- [x] Google Gemini integration
+- [x] Conditional logic (ConditionalStep)
+- [x] Sub-flow composition (FlowAdapter)
 - [ ] Webhook event adapter
 - [ ] Metrics collection adapter
 - [ ] Advanced flow patterns (loops, fan-out/fan-in)

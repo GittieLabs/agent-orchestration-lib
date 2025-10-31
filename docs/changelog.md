@@ -5,6 +5,63 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-10-31
+
+### Added
+- **OpenAI Integration**: Complete integration with GPT-4, GPT-4-turbo, and GPT-3.5-turbo models
+  - `OpenAIAgent` for executing OpenAI API calls
+  - Automatic token counting using tiktoken
+  - Cost estimation per request
+  - Support for system messages, conversation history, and JSON response format
+  - Helper functions: `create_simple_prompt()`, `create_system_prompt()`
+
+- **Anthropic Integration**: Complete integration with Claude 3 models
+  - `AnthropicAgent` for Claude Opus, Sonnet, and Haiku models
+  - 200K token context window support
+  - System prompt support (Claude's preferred format)
+  - Cost estimation per request (per 1M tokens pricing)
+  - Helper functions: `create_simple_prompt()`, `create_system_prompt()`
+
+- **Google Gemini Integration**: Complete integration with Gemini models
+  - `GeminiAgent` for Gemini Pro, Gemini 1.5 Pro, and Gemini 1.5 Flash
+  - Up to 1M token context window (Gemini 1.5)
+  - Safety ratings extraction
+  - Cost estimation per request
+  - Configurable sampling parameters (temperature, top-k, top-p)
+  - Helper function: `create_simple_prompt()`
+
+- **7 Comprehensive Examples**:
+  - `basic-openai-agent.py` - OpenAI integration basics
+  - `anthropic-agent.py` - Anthropic Claude usage patterns
+  - `gemini-agent.py` - Google Gemini demonstrations
+  - `multi-llm-fallback.py` - Provider fallback strategies
+  - `llm-comparison.py` - Side-by-side provider comparison
+  - `llm-cost-tracking.py` - Cost tracking and budget management
+  - `conversation-agent.py` - Multi-turn conversational agents
+
+- **Optional Dependencies**: Install integrations separately
+  - `pip install agent-orchestration-lib[openai]`
+  - `pip install agent-orchestration-lib[anthropic]`
+  - `pip install agent-orchestration-lib[gemini]`
+  - `pip install agent-orchestration-lib[all-llm]`
+
+### Features
+- Token counting and cost estimation for all LLM providers
+- Async/await support for all LLM API calls
+- Integration with existing retry strategies (including `LLMFallbackRetry`)
+- Event emission for observability
+- Type-safe Pydantic models for all inputs and outputs
+- Helper utilities for common prompt patterns
+
+### Documentation
+- Updated README with LLM integration examples
+- Added installation instructions for optional dependencies
+- Updated package docstring with LLM integration information
+
+### Changed
+- Version bumped to 0.3.0
+- Updated package description to highlight LLM integrations
+
 ## [0.2.0] - 2025-01-24
 
 ### Added
