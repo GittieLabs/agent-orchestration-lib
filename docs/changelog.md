@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2025-10-31
+
+### Fixed
+- **SwitchStep**: Fixed `emit_progress()` method calls to use correct signature
+  - Added missing `await` keyword for all emit_progress() calls
+  - Fixed parameters to use named arguments: `stage`, `progress`, `message`, `details`
+  - Added descriptive messages for better observability
+  - Set appropriate progress values (0.0 for case selection, 0.5 for execution)
+
 ## [0.3.0] - 2025-10-31
 
 ### Added
