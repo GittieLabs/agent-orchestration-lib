@@ -157,8 +157,11 @@ class SwitchStep(AgentBlock[TInput, TOutput], Generic[TInput, TOutput]):
         logger.debug(f"SwitchStep '{self.name}': Selector returned '{case_key}'")
 
         # Emit progress with selected case
-        self.emit_progress(
-            "case_selected", {"case": case_key, "available_cases": list(self.cases.keys())}
+        await self.emit_progress(
+            stage="case_selected",
+            progress=0.0,
+            message=f"Selected case '{case_key}'",
+            details={"case": case_key, "available_cases": list(self.cases.keys())},
         )
 
         # Find matching agent
@@ -170,9 +173,11 @@ class SwitchStep(AgentBlock[TInput, TOutput], Generic[TInput, TOutput]):
                     f"SwitchStep '{self.name}': No case matched '{case_key}', "
                     f"using default agent '{self.default_agent.name}'"
                 )
-                self.emit_progress(
-                    "using_default",
-                    {
+                await self.emit_progress(
+                    stage="using_default",
+                    progress=0.5,
+                    message=f"No match for '{case_key}', using default agent '{self.default_agent.name}'",
+                    details={
                         "case": case_key,
                         "default_agent": self.default_agent.name,
                     },
@@ -191,9 +196,11 @@ class SwitchStep(AgentBlock[TInput, TOutput], Generic[TInput, TOutput]):
                 f"SwitchStep '{self.name}': Matched case '{case_key}', "
                 f"executing agent '{selected_agent.name}'"
             )
-            self.emit_progress(
-                "executing_case",
-                {
+            await self.emit_progress(
+                stage="executing_case",
+                progress=0.5,
+                message=f"Executing case '{case_key}' with agent '{selected_agent.name}'",
+                details={
                     "case": case_key,
                     "agent": selected_agent.name,
                 },
