@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2025-10-31
+
+### Fixed
+- **LLM Integrations**: Fixed `emit_progress()` method calls in all LLM agents (9 total fixes)
+  - **OpenAI Agent**: Fixed 3 emit_progress() calls (calling_openai_api, openai_api_complete, openai_api_error)
+  - **Anthropic Agent**: Fixed 3 emit_progress() calls (calling_anthropic_api, anthropic_api_complete, anthropic_api_error)
+  - **Gemini Agent**: Fixed 3 emit_progress() calls (calling_gemini_api, gemini_api_complete, gemini_api_error)
+  - Added missing `await` keyword for all emit_progress() calls
+  - Fixed parameters to use named arguments: `stage`, `progress`, `message`, `details`
+  - Added descriptive messages for better observability
+  - Set appropriate progress values (0.0 for start, 1.0 for completion, 0.0 for errors)
+  - Bug: emit_progress() was being called with only 2 arguments instead of required 4 arguments
+
 ## [0.3.1] - 2025-10-31
 
 ### Fixed
