@@ -226,15 +226,12 @@ class AnthropicAgent(AgentBlock[AnthropicPrompt, AnthropicResponse]):
             )
             raise
 
-    async def on_complete(
-        self, input_data: AnthropicPrompt, output_data: AnthropicResponse
-    ) -> None:
+    async def on_complete(self, output_data: AnthropicResponse) -> None:
         """Hook called after successful execution.
 
         Logs cost and token usage for tracking.
 
         Args:
-            input_data: The input prompt
             output_data: The generated response
         """
         logger.info(

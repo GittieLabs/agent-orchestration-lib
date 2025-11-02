@@ -225,13 +225,12 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
             )
             raise
 
-    async def on_complete(self, input_data: GeminiPrompt, output_data: GeminiResponse) -> None:
+    async def on_complete(self, output_data: GeminiResponse) -> None:
         """Hook called after successful execution.
 
         Logs cost and token usage for tracking.
 
         Args:
-            input_data: The input prompt
             output_data: The generated response
         """
         logger.info(

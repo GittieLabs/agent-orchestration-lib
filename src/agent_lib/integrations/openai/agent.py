@@ -212,13 +212,12 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
             )
             raise
 
-    async def on_complete(self, input_data: OpenAIPrompt, output_data: OpenAIResponse) -> None:
+    async def on_complete(self, output_data: OpenAIResponse) -> None:
         """Hook called after successful execution.
 
         Logs cost and token usage for tracking.
 
         Args:
-            input_data: The input prompt
             output_data: The generated response
         """
         logger.info(
