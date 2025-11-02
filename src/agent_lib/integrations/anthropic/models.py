@@ -1,8 +1,10 @@
 """Pydantic models for Anthropic integration."""
 
-from typing import List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
+
+from ..common.tool_models import ToolCall, ToolDefinition
 
 
 class AnthropicMessage(BaseModel):
@@ -56,6 +58,12 @@ class AnthropicPrompt(BaseModel):
     stop_sequences: Optional[List[str]] = Field(
         default=None, max_length=4, description="Stop sequences"
     )
+    tools: Optional[List[ToolDefinition]] = Field(
+        default=None, description="Tools available for the model to call"
+    )
+    tool_choice: Optional[Dict[str, Any]] = Field(
+        default=None, description="Control tool calling behavior"
+    )
 
 
 class AnthropicResponse(BaseModel):
@@ -82,10 +90,13 @@ class AnthropicResponse(BaseModel):
         ... )
     """
 
-    content: str = Field(description="Generated text content")
+    content: Optional[str] = Field(default=None, description="Generated text content")
     model: str = Field(description="Model used for generation")
     stop_reason: str = Field(description="Reason generation stopped")
     input_tokens: int = Field(description="Tokens in input")
     output_tokens: int = Field(description="Tokens in output")
     total_tokens: int = Field(description="Total tokens used")
     cost_usd: float = Field(description="Estimated cost in USD")
+    tool_calls: Optional[List[ToolCall]] = Field(
+        default=None, description="Tool calls made by the model"
+    )

@@ -1,8 +1,10 @@
 """Pydantic models for Google Gemini integration."""
 
-from typing import List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
+
+from ..common.tool_models import ToolCall, ToolDefinition
 
 
 class GeminiPrompt(BaseModel):
@@ -48,6 +50,9 @@ class GeminiPrompt(BaseModel):
     top_k: Optional[int] = Field(default=None, ge=1, description="Top-k sampling")
     stop_sequences: Optional[List[str]] = Field(default=None, description="Stop sequences")
     candidate_count: int = Field(default=1, ge=1, le=8, description="Number of candidates")
+    tools: Optional[List[ToolDefinition]] = Field(
+        default=None, description="Tools available for the model to call"
+    )
 
 
 class GeminiSafetySettings(BaseModel):
@@ -89,7 +94,7 @@ class GeminiResponse(BaseModel):
         ... )
     """
 
-    content: str = Field(description="Generated text content")
+    content: Optional[str] = Field(default=None, description="Generated text content")
     model: str = Field(description="Model used for generation")
     finish_reason: str = Field(description="Reason generation stopped")
     prompt_tokens: int = Field(description="Tokens in prompt (estimated)")
@@ -98,4 +103,7 @@ class GeminiResponse(BaseModel):
     cost_usd: float = Field(description="Estimated cost in USD")
     safety_ratings: Optional[List[dict]] = Field(
         default=None, description="Safety ratings if available"
+    )
+    tool_calls: Optional[List[ToolCall]] = Field(
+        default=None, description="Tool calls made by the model"
     )

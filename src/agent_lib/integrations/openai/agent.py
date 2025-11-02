@@ -10,6 +10,7 @@ from agent_lib.core.execution_context import ExecutionContext
 
 from .models import OpenAIMessage, OpenAIPrompt, OpenAIResponse
 from .utils import calculate_cost
+from .tool_utils import tool_definition_to_openai, openai_tool_call_to_unified
 
 
 class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
@@ -155,9 +156,16 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
         if input_data.response_format is not None:
             api_params["response_format"] = input_data.response_format
 
+        # Add tools if provided
+        if input_data.tools is not None:
+            api_params["tools"] = [tool_definition_to_openai(tool) for tool in input_data.tools]
+            if input_data.tool_choice is not None:
+                api_params["tool_choice"] = input_data.tool_choice
+
         logger.debug(
             f"Calling OpenAI API with model='{model}', "
-            f"messages={len(messages_dict)}, temp={input_data.temperature}"
+            f"messages={len(messages_dict)}, temp={input_data.temperature}, "
+            f"tools={len(input_data.tools) if input_data.tools else 0}"
         )
 
         try:
@@ -165,11 +173,19 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
             response = await self.client.chat.completions.create(**api_params)
 
             # Extract response data
-            content = response.choices[0].message.content or ""
+            message = response.choices[0].message
+            content = message.content
             finish_reason = response.choices[0].finish_reason
             prompt_tokens = response.usage.prompt_tokens
             completion_tokens = response.usage.completion_tokens
             total_tokens = response.usage.total_tokens
+
+            # Extract tool calls if present
+            tool_calls = None
+            if hasattr(message, "tool_calls") and message.tool_calls:
+                tool_calls = [
+                    openai_tool_call_to_unified(tc) for tc in message.tool_calls
+                ]
 
             # Calculate cost
             cost_usd = calculate_cost(prompt_tokens, completion_tokens, model)
@@ -200,6 +216,7 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
                 completion_tokens=completion_tokens,
                 total_tokens=total_tokens,
                 cost_usd=cost_usd,
+                tool_calls=tool_calls,
             )
 
         except Exception as e:

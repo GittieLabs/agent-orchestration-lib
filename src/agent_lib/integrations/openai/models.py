@@ -4,14 +4,25 @@ from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
+from ..common.tool_models import ToolCall, ToolDefinition
+
 
 class OpenAIMessage(BaseModel):
     """A single message in the conversation."""
 
-    role: Literal["system", "user", "assistant"] = Field(
+    role: Literal["system", "user", "assistant", "tool"] = Field(
         description="The role of the message sender"
     )
-    content: str = Field(description="The content of the message")
+    content: Optional[str] = Field(default=None, description="The content of the message")
+    tool_calls: Optional[List[ToolCall]] = Field(
+        default=None, description="Tool calls made by assistant"
+    )
+    tool_call_id: Optional[str] = Field(
+        default=None, description="ID of the tool call this message responds to (for role=tool)"
+    )
+    name: Optional[str] = Field(
+        default=None, description="Name of the tool for tool messages"
+    )
 
 
 class OpenAIPrompt(BaseModel):
@@ -59,21 +70,29 @@ class OpenAIPrompt(BaseModel):
     response_format: Optional[Dict[str, str]] = Field(
         default=None, description="Response format specification"
     )
+    tools: Optional[List[ToolDefinition]] = Field(
+        default=None, description="Tools available for the model to call"
+    )
+    tool_choice: Optional[str] = Field(
+        default=None, description="Control tool calling behavior (auto, none, or specific tool)"
+    )
 
 
 class OpenAIResponse(BaseModel):
     """Output model from OpenAI agent.
 
     Attributes:
-        content: The generated text content
+        content: The generated text content (None if only tool calls)
         model: The model that generated the response
-        finish_reason: Reason the generation stopped ('stop', 'length', 'content_filter', etc.)
+        finish_reason: Reason the generation stopped ('stop', 'length', 'tool_calls', etc.)
         prompt_tokens: Number of tokens in the prompt
         completion_tokens: Number of tokens in the completion
         total_tokens: Total tokens used (prompt + completion)
         cost_usd: Estimated cost in USD for this request
+        tool_calls: List of tool calls made by the model (None if no tools called)
 
     Examples:
+        Text response:
         >>> response = OpenAIResponse(
         ...     content="Hello! How can I help you?",
         ...     model="gpt-4",
@@ -81,14 +100,30 @@ class OpenAIResponse(BaseModel):
         ...     prompt_tokens=10,
         ...     completion_tokens=8,
         ...     total_tokens=18,
-        ...     cost_usd=0.00054
+        ...     cost_usd=0.00054,
+        ...     tool_calls=None
+        ... )
+
+        Tool call response:
+        >>> response = OpenAIResponse(
+        ...     content=None,
+        ...     model="gpt-4",
+        ...     finish_reason="tool_calls",
+        ...     prompt_tokens=15,
+        ...     completion_tokens=25,
+        ...     total_tokens=40,
+        ...     cost_usd=0.00120,
+        ...     tool_calls=[ToolCall(id="call_abc", name="get_weather", arguments={"city": "NYC"})]
         ... )
     """
 
-    content: str = Field(description="Generated text content")
+    content: Optional[str] = Field(default=None, description="Generated text content")
     model: str = Field(description="Model used for generation")
     finish_reason: str = Field(description="Reason generation stopped")
     prompt_tokens: int = Field(description="Tokens in prompt")
     completion_tokens: int = Field(description="Tokens in completion")
     total_tokens: int = Field(description="Total tokens used")
     cost_usd: float = Field(description="Estimated cost in USD")
+    tool_calls: Optional[List[ToolCall]] = Field(
+        default=None, description="Tool calls made by the model"
+    )
