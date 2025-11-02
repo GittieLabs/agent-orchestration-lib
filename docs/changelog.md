@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2025-11-02 (In Progress)
+
+### Added
+- **Unified Tool/Function Calling**: Provider-agnostic tool calling interface
+  - `ToolDefinition`: Universal tool definition compatible with OpenAI, Anthropic, and Gemini
+  - `ToolParameter`: JSON Schema-based parameter definitions
+  - `ToolCall`: Unified format for tool calls from LLMs
+  - `ToolResult`: Unified format for tool execution results
+  - Same tool definitions work across all LLM providers
+
+- **OpenAI Tool Support** (COMPLETE):
+  - Updated `OpenAIPrompt` to accept `tools` and `tool_choice` parameters
+  - Updated `OpenAIMessage` to support `tool` role and tool-related fields
+  - Updated `OpenAIResponse` to include `tool_calls`
+  - Automatic conversion between unified and OpenAI native formats
+  - Multi-turn conversations with tool results
+  - Example: `examples/tool-calling-openai.py`
+
+- **Anthropic Tool Support** (Models Ready):
+  - Updated `AnthropicPrompt` and `AnthropicResponse` for tool support
+  - Tool format conversion utilities
+  - Agent implementation: In Progress
+
+- **Gemini Tool Support** (Models Ready):
+  - Updated `GeminiPrompt` and `GeminiResponse` for tool support
+  - Tool format conversion utilities
+  - Agent implementation: In Progress
+
+### Changed
+- Made `content` field optional in all LLM response models (can be None when only tool calls)
+
+### Documentation
+- Added comprehensive tool calling example for OpenAI
+- Tool usage patterns and best practices
+
 ## [0.3.3] - 2025-10-31
 
 ### Fixed
