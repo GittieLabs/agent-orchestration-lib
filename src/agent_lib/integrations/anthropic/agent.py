@@ -10,6 +10,7 @@ from agent_lib.core.execution_context import ExecutionContext
 
 from .models import AnthropicMessage, AnthropicPrompt, AnthropicResponse
 from .utils import calculate_cost
+from .tool_utils import tool_definition_to_anthropic, anthropic_tool_use_to_unified
 
 
 class AnthropicAgent(AgentBlock[AnthropicPrompt, AnthropicResponse]):
@@ -164,21 +165,40 @@ class AnthropicAgent(AgentBlock[AnthropicPrompt, AnthropicResponse]):
         if input_data.stop_sequences is not None:
             api_params["stop_sequences"] = input_data.stop_sequences
 
+        # Add tools if provided
+        if input_data.tools is not None:
+            api_params["tools"] = [tool_definition_to_anthropic(tool) for tool in input_data.tools]
+            if input_data.tool_choice is not None:
+                api_params["tool_choice"] = input_data.tool_choice
+
         logger.debug(
             f"Calling Anthropic API with model='{model}', "
             f"messages={len(messages_dict)}, max_tokens={max_tokens}, "
-            f"temp={input_data.temperature}"
+            f"temp={input_data.temperature}, "
+            f"tools={len(input_data.tools) if input_data.tools else 0}"
         )
 
         try:
             # Call Anthropic API
             response = await self.client.messages.create(**api_params)
 
-            # Extract response data
+            # Extract response data (text and tool calls)
             content = ""
+            tool_calls = []
+
             for block in response.content:
                 if hasattr(block, "text"):
                     content += block.text
+                elif hasattr(block, "type") and block.type == "tool_use":
+                    # Convert Anthropic tool_use block to unified ToolCall
+                    tool_call = anthropic_tool_use_to_unified(block)
+                    tool_calls.append(tool_call)
+
+            # Set content to None if empty and we have tool calls
+            if not content and tool_calls:
+                content = None
+            elif not content:
+                content = ""
 
             stop_reason = response.stop_reason
             input_tokens = response.usage.input_tokens
@@ -214,6 +234,7 @@ class AnthropicAgent(AgentBlock[AnthropicPrompt, AnthropicResponse]):
                 output_tokens=output_tokens,
                 total_tokens=total_tokens,
                 cost_usd=cost_usd,
+                tool_calls=tool_calls if tool_calls else None,
             )
 
         except Exception as e:

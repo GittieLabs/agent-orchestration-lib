@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.0] - 2025-11-02 (In Progress)
+## [0.4.0] - 2025-11-02
 
 ### Added
 - **Unified Tool/Function Calling**: Provider-agnostic tool calling interface
@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `ToolCall`: Unified format for tool calls from LLMs
   - `ToolResult`: Unified format for tool execution results
   - Same tool definitions work across all LLM providers
+  - Single source of truth for tools - define once, use everywhere
 
 - **OpenAI Tool Support** (COMPLETE):
   - Updated `OpenAIPrompt` to accept `tools` and `tool_choice` parameters
@@ -21,24 +22,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated `OpenAIResponse` to include `tool_calls`
   - Automatic conversion between unified and OpenAI native formats
   - Multi-turn conversations with tool results
+  - Agent implementation complete with tool call extraction
   - Example: `examples/tool-calling-openai.py`
 
-- **Anthropic Tool Support** (Models Ready):
-  - Updated `AnthropicPrompt` and `AnthropicResponse` for tool support
-  - Tool format conversion utilities
-  - Agent implementation: In Progress
+- **Anthropic Tool Support** (COMPLETE):
+  - Updated `AnthropicPrompt` to accept `tools` and `tool_choice` parameters
+  - Updated `AnthropicMessage` to support tool result content blocks
+  - Updated `AnthropicResponse` to include `tool_calls`
+  - Automatic conversion between unified and Anthropic tool_use format
+  - Agent implementation complete with tool_use block parsing
+  - Multi-turn conversations with tool results
+  - Example: `examples/tool-calling-anthropic.py`
 
-- **Gemini Tool Support** (Models Ready):
-  - Updated `GeminiPrompt` and `GeminiResponse` for tool support
-  - Tool format conversion utilities
-  - Agent implementation: In Progress
+- **Gemini Tool Support** (COMPLETE):
+  - Updated `GeminiPrompt` to accept `tools` parameter
+  - Updated `GeminiResponse` to include `tool_calls`
+  - Automatic conversion between unified and Gemini function declaration format
+  - Agent implementation complete with function_call parsing
+  - Support for Gemini 1.5 Flash and Pro models
+  - Example: `examples/tool-calling-gemini.py`
 
 ### Changed
 - Made `content` field optional in all LLM response models (can be None when only tool calls)
+- All three LLM agents now support tool calling with consistent interface
 
 ### Documentation
-- Added comprehensive tool calling example for OpenAI
+- Added comprehensive tool calling examples for all three providers
 - Tool usage patterns and best practices
+- Multi-turn conversation examples with tool results
+- Examples show same tool definitions working across all providers
+
+### Testing
+- 17 unit tests for tool calling functionality (all passing)
+- Model instantiation tests
+- Format conversion tests
+- Validation tests
 
 ## [0.3.3] - 2025-10-31
 

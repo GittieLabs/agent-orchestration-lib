@@ -10,6 +10,7 @@ from agent_lib.core.execution_context import ExecutionContext
 
 from .models import GeminiPrompt, GeminiResponse
 from .utils import calculate_cost, create_generation_config, estimate_tokens, parse_finish_reason
+from .tool_utils import tool_definition_to_gemini, gemini_function_call_to_unified
 
 
 class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
@@ -152,8 +153,15 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
             candidate_count=input_data.candidate_count,
         )
 
+        # Add tools if provided
+        tools = None
+        if input_data.tools is not None:
+            tools = [tool_definition_to_gemini(tool) for tool in input_data.tools]
+
         logger.debug(
-            f"Calling Gemini API with model='{model_name}', " f"config={generation_config}"
+            f"Calling Gemini API with model='{model_name}', "
+            f"config={generation_config}, "
+            f"tools={len(input_data.tools) if input_data.tools else 0}"
         )
 
         try:
@@ -161,18 +169,48 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
             prompt_tokens = estimate_tokens(input_data.prompt)
 
             # Call Gemini API (async)
-            response = await model.generate_content_async(
-                input_data.prompt, generation_config=generation_config
-            )
+            if tools:
+                response = await model.generate_content_async(
+                    input_data.prompt,
+                    generation_config=generation_config,
+                    tools=tools
+                )
+            else:
+                response = await model.generate_content_async(
+                    input_data.prompt, generation_config=generation_config
+                )
 
-            # Extract response data
-            content = response.text if hasattr(response, "text") else ""
+            # Extract response data (text and tool calls)
+            content = ""
+            tool_calls = []
+
+            if response.candidates:
+                candidate = response.candidates[0]
+
+                # Check for function calls (Gemini's tool calling mechanism)
+                if hasattr(candidate.content, "parts"):
+                    for part in candidate.content.parts:
+                        if hasattr(part, "text") and part.text:
+                            content += part.text
+                        elif hasattr(part, "function_call"):
+                            # Convert Gemini function_call to unified ToolCall
+                            tool_call = gemini_function_call_to_unified(part.function_call)
+                            tool_calls.append(tool_call)
+                elif hasattr(response, "text"):
+                    content = response.text
+
+            # Set content to None if empty and we have tool calls
+            if not content and tool_calls:
+                content = None
+            elif not content:
+                content = ""
+
             finish_reason = parse_finish_reason(
                 response.candidates[0].finish_reason.name if response.candidates else None
             )
 
             # Estimate completion tokens
-            completion_tokens = estimate_tokens(content)
+            completion_tokens = estimate_tokens(content) if content else 0
             total_tokens = prompt_tokens + completion_tokens
 
             # Get safety ratings if available
@@ -213,6 +251,7 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
                 total_tokens=total_tokens,
                 cost_usd=cost_usd,
                 safety_ratings=safety_ratings,
+                tool_calls=tool_calls if tool_calls else None,
             )
 
         except Exception as e:
