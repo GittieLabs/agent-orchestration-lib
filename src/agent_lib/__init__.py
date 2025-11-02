@@ -24,7 +24,7 @@ Install integrations:
 See documentation at: https://agent-orchestration-lib.readthedocs.io
 """
 
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 
 # Core components
 from .core import (

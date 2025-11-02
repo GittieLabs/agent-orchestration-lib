@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2025-10-31
+
+### Fixed
+- **LLM Integrations**: Fixed `on_complete()` method signature in all LLM agents
+  - **Issue**: Base class calls `on_complete(output_data)` with 1 argument, but LLM agents defined it with 2 parameters `(input_data, output_data)`
+  - **Error**: `TypeError: on_complete() missing 1 required positional argument: 'output_data'`
+  - **Fix**: Removed unused `input_data` parameter from all three LLM agents
+  - **Affected agents**: OpenAI, Anthropic, Gemini
+
 ## [0.3.2] - 2025-10-31
 
 ### Fixed
