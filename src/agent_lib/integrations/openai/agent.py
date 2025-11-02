@@ -126,8 +126,11 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
         model = input_data.model or self.default_model
 
         # Emit progress before API call
-        self.emit_progress(
-            "calling_openai_api", {"model": model, "messages_count": len(input_data.messages)}
+        await self.emit_progress(
+            stage="calling_openai_api",
+            progress=0.0,
+            message=f"Calling OpenAI API with model '{model}'",
+            details={"model": model, "messages_count": len(input_data.messages)},
         )
 
         # Convert Pydantic models to dicts for API
@@ -172,9 +175,11 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
             cost_usd = calculate_cost(prompt_tokens, completion_tokens, model)
 
             # Emit progress after successful API call
-            self.emit_progress(
-                "openai_api_complete",
-                {
+            await self.emit_progress(
+                stage="openai_api_complete",
+                progress=1.0,
+                message=f"OpenAI API call complete: {total_tokens} tokens, ${cost_usd:.4f}",
+                details={
                     "tokens": total_tokens,
                     "cost": cost_usd,
                     "finish_reason": finish_reason,
@@ -199,7 +204,12 @@ class OpenAIAgent(AgentBlock[OpenAIPrompt, OpenAIResponse]):
 
         except Exception as e:
             logger.error(f"OpenAI API call failed: {e}")
-            self.emit_progress("openai_api_error", {"error": str(e)})
+            await self.emit_progress(
+                stage="openai_api_error",
+                progress=0.0,
+                message=f"OpenAI API call failed: {str(e)}",
+                details={"error": str(e)},
+            )
             raise
 
     async def on_complete(self, input_data: OpenAIPrompt, output_data: OpenAIResponse) -> None:

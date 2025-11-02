@@ -132,7 +132,12 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
         model_name = input_data.model or self.default_model
 
         # Emit progress before API call
-        self.emit_progress("calling_gemini_api", {"model": model_name})
+        await self.emit_progress(
+            stage="calling_gemini_api",
+            progress=0.0,
+            message=f"Calling Gemini API with model '{model_name}'",
+            details={"model": model_name},
+        )
 
         # Get model
         model = self.get_model(model_name)
@@ -182,9 +187,11 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
             cost_usd = calculate_cost(prompt_tokens, completion_tokens, model_name)
 
             # Emit progress after successful API call
-            self.emit_progress(
-                "gemini_api_complete",
-                {
+            await self.emit_progress(
+                stage="gemini_api_complete",
+                progress=1.0,
+                message=f"Gemini API call complete: {total_tokens} tokens, ${cost_usd:.6f}",
+                details={
                     "tokens": total_tokens,
                     "cost": cost_usd,
                     "finish_reason": finish_reason,
@@ -210,7 +217,12 @@ class GeminiAgent(AgentBlock[GeminiPrompt, GeminiResponse]):
 
         except Exception as e:
             logger.error(f"Gemini API call failed: {e}")
-            self.emit_progress("gemini_api_error", {"error": str(e)})
+            await self.emit_progress(
+                stage="gemini_api_error",
+                progress=0.0,
+                message=f"Gemini API call failed: {str(e)}",
+                details={"error": str(e)},
+            )
             raise
 
     async def on_complete(self, input_data: GeminiPrompt, output_data: GeminiResponse) -> None:

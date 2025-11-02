@@ -136,9 +136,11 @@ class AnthropicAgent(AgentBlock[AnthropicPrompt, AnthropicResponse]):
         max_tokens = input_data.max_tokens or self.default_max_tokens
 
         # Emit progress before API call
-        self.emit_progress(
-            "calling_anthropic_api",
-            {"model": model, "messages_count": len(input_data.messages)},
+        await self.emit_progress(
+            stage="calling_anthropic_api",
+            progress=0.0,
+            message=f"Calling Anthropic API with model '{model}'",
+            details={"model": model, "messages_count": len(input_data.messages)},
         )
 
         # Convert Pydantic models to dicts for API
@@ -187,9 +189,11 @@ class AnthropicAgent(AgentBlock[AnthropicPrompt, AnthropicResponse]):
             cost_usd = calculate_cost(input_tokens, output_tokens, model)
 
             # Emit progress after successful API call
-            self.emit_progress(
-                "anthropic_api_complete",
-                {
+            await self.emit_progress(
+                stage="anthropic_api_complete",
+                progress=1.0,
+                message=f"Anthropic API call complete: {total_tokens} tokens, ${cost_usd:.6f}",
+                details={
                     "tokens": total_tokens,
                     "cost": cost_usd,
                     "stop_reason": stop_reason,
@@ -214,7 +218,12 @@ class AnthropicAgent(AgentBlock[AnthropicPrompt, AnthropicResponse]):
 
         except Exception as e:
             logger.error(f"Anthropic API call failed: {e}")
-            self.emit_progress("anthropic_api_error", {"error": str(e)})
+            await self.emit_progress(
+                stage="anthropic_api_error",
+                progress=0.0,
+                message=f"Anthropic API call failed: {str(e)}",
+                details={"error": str(e)},
+            )
             raise
 
     async def on_complete(
